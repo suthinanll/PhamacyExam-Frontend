@@ -1,6 +1,12 @@
+import Navbar_user from "@/components/Navbar_user"
+
 const followup = () => {
   return (
-    <div>followup</div>
+    <>
+    <Navbar_user/>
+        <div>followup</div>
+
+    </>
   )
 }
 export default followup

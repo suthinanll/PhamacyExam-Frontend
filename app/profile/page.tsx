@@ -1,11 +1,12 @@
 import Navbar_user from "@/components/Navbar_user"
 
-const calender = () => {
+const Profile = () => {
   return (
     <>
         <Navbar_user/>
-        <div>calender</div>
+
+    <div>Profile</div>
     </>
   )
 }
-export default calender
+export default Profile

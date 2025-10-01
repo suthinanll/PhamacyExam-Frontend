@@ -1,6 +1,11 @@
+import Navbar_user from "@/components/Navbar_user"
 const chatbot = () => {
   return (
-    <div>chatbot</div>
+    <>
+      <Navbar_user />
+      <div>chatbot</div>
+
+    </>
   )
 }
 export default chatbot
