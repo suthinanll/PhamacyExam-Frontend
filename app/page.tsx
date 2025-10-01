@@ -4,8 +4,16 @@ import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar_user';
 import Footer from '@/components/Footer';
 import NewsCard from '@/components/์News';
+import SearchBar from "@/components/SearchBar";
+
 
 const Page = () => {
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSearch = (query: string) => {
+    console.log("🔍 ค้นหา:", query);
+    // ตรงนี้สามารถต่อ API หรือ filter ข้อมูลได้เลย
+  };
 
   const newsData = [
     {
@@ -26,6 +34,14 @@ const Page = () => {
     },
     {
       id: 3,
+      title: "Pharma TRENDS EP.07: The Art of Being Positive",
+      desc: "ในวันที่โลกหมุนเร็ว งานถาโถม และความคิดลบเข้ามาไม่หยุด...",
+      img: "/img/news3.jpg",
+      badge: "",
+      link: "#",
+    },
+     {
+      id: 4,
       title: "Pharma TRENDS EP.07: The Art of Being Positive",
       desc: "ในวันที่โลกหมุนเร็ว งานถาโถม และความคิดลบเข้ามาไม่หยุด...",
       img: "/img/news3.jpg",
@@ -76,7 +92,12 @@ const Page = () => {
       <Navbar />
 
       <div className='bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6'>
-        <div className='max-w-7xl mx-auto'>
+        <main className="max-w-8xl mx-auto mb-4 bg-white">
+          <SearchBar placeholder="ค้นหาข้อมูล..." onSearch={(q) => console.log(q)} />
+        </main>
+
+
+        <div className='max-w-8xl mx-auto'>
 
           {/* Countdown Section */}
           <div className='bg-white rounded-2xl sm:rounded-3xl shadow-xl p-4 sm:p-6 md:p-8 mb-6 border border-gray-100'>
@@ -138,12 +159,12 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {newsData.map((news) => (
               <NewsCard key={news.id} {...news} />
             ))}
           </div>
-          
+
         </div>
       </div>
 
