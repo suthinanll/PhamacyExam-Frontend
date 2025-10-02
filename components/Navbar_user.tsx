@@ -34,6 +34,8 @@ const Navbar = () => {
 
   const navItems = [
     { href: '/', label: 'เภสัชพร้อมสอบ' },
+    { href: '/', label: 'หน้าหลัก' },
+
     {
       href: '/examset',
       label: 'คลังข้อสอบ',
@@ -49,24 +51,24 @@ const Navbar = () => {
 
   const notifications = [
     {
-      id: 1, type: 'exam',icon: Calendar,iconColor: 'text-red-500',bgColor: 'bg-red-50',title: 'ใกล้ถึงกำหนดการสอบแล้ว!',
-      message: 'การสอบเภสัชวิทยา 1 จะเริ่มในวันพรุ่งนี้ เวลา 09:00 น.',time: '1 ชั่วโมงที่แล้ว', unread: true, link: '/calender'
+      id: 1, type: 'exam', icon: Calendar, iconColor: 'text-red-500', bgColor: 'bg-red-50', title: 'ใกล้ถึงกำหนดการสอบแล้ว!',
+      message: 'การสอบเภสัชวิทยา 1 จะเริ่มในวันพรุ่งนี้ เวลา 09:00 น.', time: '1 ชั่วโมงที่แล้ว', unread: true, link: '/calender'
     },
     {
       id: 2, type: 'exam', icon: Clock, iconColor: 'text-orange-500', bgColor: 'bg-orange-50',
-      title: 'เตือนการสอบ', message: 'อีก 3 วันจะถึงการสอบเภสัชเคมี ควรทบทวนบทที่ 5-8',time: '3 ชั่วโมงที่แล้ว', unread: true, link: '/calender'
+      title: 'เตือนการสอบ', message: 'อีก 3 วันจะถึงการสอบเภสัชเคมี ควรทบทวนบทที่ 5-8', time: '3 ชั่วโมงที่แล้ว', unread: true, link: '/calender'
     },
     {
       id: 4, type: 'update', icon: BookOpen, iconColor: 'text-blue-500', bgColor: 'bg-blue-50',
-      title: 'ข้อสอบใหม่', message: 'เพิ่มข้อสอบชุดใหม่ "เภสัชศาสตร์คลินิก" 50 ข้อ',time: '1 วันที่แล้ว', unread: false, link: '/examset'
+      title: 'ข้อสอบใหม่', message: 'เพิ่มข้อสอบชุดใหม่ "เภสัชศาสตร์คลินิก" 50 ข้อ', time: '1 วันที่แล้ว', unread: false, link: '/examset'
     },
     {
       id: 5, type: 'achievement', icon: CheckCircle, iconColor: 'text-purple-500', bgColor: 'bg-purple-50',
-      title: 'ความสำเร็จใหม่', message: 'ยินดีด้วย! คุณทำข้อสอบครบ 100 ชุดแล้ว',time: '2 วันที่แล้ว', unread: false, link: '/followup'
+      title: 'ความสำเร็จใหม่', message: 'ยินดีด้วย! คุณทำข้อสอบครบ 100 ชุดแล้ว', time: '2 วันที่แล้ว', unread: false, link: '/followup'
     },
     {
       id: 6, type: 'reminder', icon: AlertCircle, iconColor: 'text-yellow-500', bgColor: 'bg-yellow-50',
-      title: 'แนะนำการเรียน', message: 'คุณยังไม่ได้ทำข้อสอบในหมวด "เภสัชกรรมคลินิก" ควรฝึกฝนเพิ่มเติม',time: '3 วันที่แล้ว', unread: false, link: '/followup'
+      title: 'แนะนำการเรียน', message: 'คุณยังไม่ได้ทำข้อสอบในหมวด "เภสัชกรรมคลินิก" ควรฝึกฝนเพิ่มเติม', time: '3 วันที่แล้ว', unread: false, link: '/followup'
     }
   ];
 

@@ -40,11 +40,11 @@ const Page = () => {
       badge: "",
       link: "#",
     },
-     {
+    {
       id: 4,
-      title: "Pharma TRENDS EP.07: The Art of Being Positive",
-      desc: "ในวันที่โลกหมุนเร็ว งานถาโถม และความคิดลบเข้ามาไม่หยุด...",
-      img: "/img/news3.jpg",
+      title: "Clinical Practice Guidelines for Insomnia 2025",
+      desc: "จฉบับใหม่ล่าสุด มาเจาะลึกการจัดการทางเภสัชวิทยาอย่างบูรณาการ ทั้งในผู้ใหญ่...",
+      img: "/img/news4.jpg",
       badge: "",
       link: "#",
     },
@@ -91,7 +91,7 @@ const Page = () => {
     <>
       <Navbar />
 
-      <div className='bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6'>
+      <div className='bg-gray-50 min-h-screen py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6'>
         <main className="max-w-8xl mx-auto mb-4 bg-white">
           <SearchBar placeholder="ค้นหาข้อมูล..." onSearch={(q) => console.log(q)} />
         </main>

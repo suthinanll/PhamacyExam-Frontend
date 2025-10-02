@@ -14,7 +14,7 @@ export default function NewsCard({
   link: string;
 }) {
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg overflow-hidden border border-gray-100 flex flex-col h-full">
+    <div className="bg-white rounded-xl sm:rounded-xl shadow-lg overflow-hidden border border-gray-100 flex flex-col h-full">
       {/* Badge + Image */}
       <div className="relative">
         {badge && (
@@ -29,9 +29,9 @@ export default function NewsCard({
           <Image
             src={img}
             alt={title}
-            width={900}
-            height={400}
-            className="w-full h-64 object-cover"
+            width={500}
+            height={300}
+            className="w-full h-55 object-cover "
           />
         </a>
       </div>
@@ -39,7 +39,7 @@ export default function NewsCard({
       {/* Content */}
       <div className="p-4 sm:p-5 md:p-6 flex flex-col flex-1">
         <a href={link}>
-          <h5 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-3">
+          <h5 className="text-xl sm:text-xl md:text-xl font-bold text-gray-900 mb-3">
             {title}
           </h5>
         </a>
