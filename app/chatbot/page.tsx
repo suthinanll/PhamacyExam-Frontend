@@ -1,15 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
-import { Sparkles, SendHorizonal, Clipboard, Check, MessageSquare, Plus, Menu, X, } from "lucide-react";
+import { Sparkles, SendHorizonal, Clipboard, Check, MessageSquare, Plus, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar_user";
-// import Footer from "@/components/Footer";
 import Image from 'next/image';
 
-
-
-// --- Custom Hook for Typewriter Effect ---
 const useTypewriter = (text: string, speed: number = 20) => {
   const [displayText, setDisplayText] = useState("");
 
@@ -32,7 +28,6 @@ const useTypewriter = (text: string, speed: number = 20) => {
   return displayText;
 };
 
-// --- Bot Message Component ---
 const BotMessage = ({ content }: { content: string }) => {
   const [isCopied, setIsCopied] = useState(false);
   const typedContent = useTypewriter(content);
@@ -65,7 +60,6 @@ const BotMessage = ({ content }: { content: string }) => {
   );
 };
 
-// --- Main Chatbot Page Component ---
 const ChatbotPage = () => {
   type Message = { id: string; sender: "user" | "bot"; text: string };
   type ChatSession = { id: string; title: string; messages: Message[]; timestamp: number };
@@ -89,16 +83,35 @@ const ChatbotPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (sidebarOpen && window.innerWidth < 1024) {
+        const sidebar = document.getElementById('chat-sidebar');
+        const toggleBtn = document.getElementById('sidebar-toggle');
+        if (sidebar && !sidebar.contains(e.target as Node) && !toggleBtn?.contains(e.target as Node)) {
+          setSidebarOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [sidebarOpen]);
+
   const handleNewChat = () => {
     setCurrentSessionId(null);
     setMessages([]);
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
   };
 
   const handleSelectSession = (sessionId: string) => {
@@ -106,6 +119,9 @@ const ChatbotPage = () => {
     if (session) {
       setCurrentSessionId(sessionId);
       setMessages(session.messages);
+      if (window.innerWidth < 1024) {
+        setSidebarOpen(false);
+      }
     }
   };
 
@@ -118,7 +134,6 @@ const ChatbotPage = () => {
     setInput("");
     setIsLoading(true);
 
-    // Simulate bot response
     setTimeout(() => {
       const botResponse: Message = {
         id: `bot-${Date.now()}`,
@@ -128,7 +143,6 @@ const ChatbotPage = () => {
       const updatedMessages = [...newMessages, botResponse];
       setMessages(updatedMessages);
 
-      // Save or update session
       if (currentSessionId) {
         setSessions(prev => prev.map(s =>
           s.id === currentSessionId ? { ...s, messages: updatedMessages } : s
@@ -165,70 +179,100 @@ const ChatbotPage = () => {
     <div className="flex flex-col h-screen bg-gray-50">
       <Navbar />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
+
+        {/* Sidebar Overlay for Mobile */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <AnimatePresence>
-          {sidebarOpen && (
-            <motion.aside
-              initial={{ x: -300 }}
-              animate={{ x: 0 }}
-              exit={{ x: -300 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="w-64 bg-white border-r border-neutral-200 flex flex-col"
-            >
-              <div className="p-4 border-b border-neutral-200">
-                <button
-                  onClick={handleNewChat}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  <Plus size={20} />
-                  <span>แชทใหม่</span>
-                </button>
-              </div>
+        <aside
+          id="chat-sidebar"
+          className={`
+            fixed lg:static inset-y-0 left-0 z-50
+            w-64 bg-white border-r border-neutral-200 
+            flex flex-col
+            transform transition-transform duration-300 ease-in-out
+            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          `}
+        >
+          <div className="p-4 border-b border-neutral-200">
+            {/* Close button for mobile */}
+            <div className="flex items-center justify-between mb-3 lg:hidden">
+              <h2 className="text-lg font-semibold text-neutral-800">เมนู</h2>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+                aria-label="Close sidebar"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
-              <div className="flex-1 overflow-y-auto p-3">
-                <h3 className="text-xs font-semibold text-neutral-500 uppercase mb-2 px-2">ประวัติการแชท</h3>
-                <div className="space-y-1">
-                  {sessions.map(session => (
-                    <button
-                      key={session.id}
-                      onClick={() => handleSelectSession(session.id)}
-                      className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors ${currentSessionId === session.id
-                          ? "bg-blue-50 text-blue-600 border border-blue-200"
-                          : "text-neutral-700 hover:bg-neutral-100"
-                        }`}
-                    >
-                      <div className="flex items-start gap-2">
-                        <MessageSquare size={16} className="mt-0.5 flex-shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm truncate">{session.title}</p>
-                          <p className="text-xs text-neutral-400 mt-0.5">
-                            {new Date(session.timestamp).toLocaleDateString('th-TH', {
-                              month: 'short',
-                              day: 'numeric'
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </motion.aside>
-          )}
-        </AnimatePresence>
-
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <header className="bg-white border-b border-neutral-200 px-4 py-3 flex items-center gap-3">
             <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
-              aria-label="Toggle sidebar"
+              onClick={handleNewChat}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
-              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+              <Plus size={20} />
+              <span>แชทใหม่</span>
             </button>
-            <h1 className="text-lg font-semibold text-neutral-800">แชตบอตผู้ช่วย</h1>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-3">
+            <h3 className="text-xs font-semibold text-neutral-500 uppercase mb-2 px-2">ประวัติการแชท</h3>
+            <div className="space-y-1">
+              {sessions.map(session => (
+                <button
+                  key={session.id}
+                  onClick={() => handleSelectSession(session.id)}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors ${currentSessionId === session.id
+                      ? "bg-blue-50 text-blue-600 border border-blue-200"
+                      : "text-neutral-700 hover:bg-neutral-100"
+                    }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <MessageSquare size={16} className="mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm truncate">{session.title}</p>
+                      <p className="text-xs text-neutral-400 mt-0.5">
+                        {new Date(session.timestamp).toLocaleDateString('th-TH', {
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Header with Breadcrumb */}
+          <header className="bg-white border-b border-neutral-200 px-4 py-3">
+            <div className="flex items-center gap-3">
+              <button
+                id="sidebar-toggle"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 hover:bg-neutral-100 rounded-lg transition-colors lg:hidden"
+                aria-label="Toggle sidebar"
+              >
+                <Menu size={20} />
+              </button>
+
+              <div className="flex items-center text-xs sm:text-sm text-gray-500 mb-2">
+                <span className="hover:text-blue-600 cursor-pointer">หน้าหลัก</span>
+                <span className="mx-2">›</span>
+                <span className="text-gray-700 font-medium">แชตบอตผู้ช่วย</span>
+              </div>
+
+            </div>
           </header>
 
           {/* Chat Area */}
@@ -237,14 +281,12 @@ const ChatbotPage = () => {
               <div className="w-full max-w-4xl mx-auto space-y-8">
                 {messages.length === 0 ? (
                   // Welcome Screen
-                  <div className="text-center pt-20">
+                  <div className="text-center pt-12 sm:pt-20">
                     <div className="inline-block p-5 bg-white rounded-full shadow-lg">
-
-                      <Image src="/img/logoPhama.png" width={50} height={50} alt={"รูปภาพโลโก้"}/>
-
+                      <Image src="/img/logoPhama.png" width={50} height={50} alt="รูปภาพโลโก้" />
                     </div>
-                    <h1 className="text-4xl font-bold text-neutral-800 mt-6">สวัสดีครับ!</h1>
-                    <p className="text-neutral-500 mt-2 text-lg">
+                    <h1 className="text-3xl sm:text-4xl font-bold text-neutral-800 mt-6">สวัสดีครับ!</h1>
+                    <p className="text-neutral-500 mt-2 text-base sm:text-lg px-4">
                       มีอะไรให้ผมช่วยเกี่ยวกับเรื่องการสอบใบประกอบวิชาชีพเภสัชกรรมบ้าง?
                     </p>
                   </div>
@@ -290,7 +332,7 @@ const ChatbotPage = () => {
             </div>
 
             {/* Input Area */}
-            <div className="px-4 lg:px-6 pb-6 pt-4 bg-neutral-50 border-t border-neutral-200">
+            <div className="px-4 lg:px-6 pb-4 sm:pb-6 pt-4 bg-neutral-50 border-t border-neutral-200">
               <div className="max-w-4xl mx-auto">
                 {messages.length === 0 && (
                   <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
@@ -298,7 +340,7 @@ const ChatbotPage = () => {
                       <button
                         key={q}
                         onClick={() => setInput(q)}
-                        className="px-4 py-2 text-sm bg-white border border-neutral-200 text-neutral-600 rounded-full hover:bg-neutral-100/80 transition-all"
+                        className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-white border border-neutral-200 text-neutral-600 rounded-full hover:bg-neutral-100/80 transition-all"
                       >
                         {q}
                       </button>
@@ -313,25 +355,22 @@ const ChatbotPage = () => {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyPress}
                     placeholder="พิมพ์คำถามของคุณที่นี่..."
-                    className="w-full text-base py-4 pl-6 pr-16 bg-white text-neutral-800 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition-all"
+                    className="w-full text-sm sm:text-base py-3 sm:py-4 pl-4 sm:pl-6 pr-14 sm:pr-16 bg-white text-neutral-800 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition-all"
                   />
                   <button
                     onClick={handleSendMessage}
                     disabled={!input.trim() || isLoading}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 rounded-full text-white bg-blue-500 hover:bg-blue-600 disabled:bg-neutral-300 disabled:cursor-not-allowed transition-all"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 sm:p-2.5 rounded-full text-white bg-blue-500 hover:bg-blue-600 disabled:bg-neutral-300 disabled:cursor-not-allowed transition-all"
                     aria-label="Send message"
                   >
-                    <SendHorizonal size={20} />
+                    <SendHorizonal size={18} className="sm:w-5 sm:h-5" />
                   </button>
                 </motion.div>
-
               </div>
             </div>
           </main>
         </div>
       </div>
-
-
     </div>
   );
 };

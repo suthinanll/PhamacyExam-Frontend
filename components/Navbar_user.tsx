@@ -15,7 +15,9 @@ import {
   BookOpen,
   CheckCircle,
   AlertCircle,
-  ChevronDown
+  ChevronDown,
+  Bookmark
+
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -328,6 +330,16 @@ const Navbar = () => {
                       <User className="w-3.5 sm:w-4 h-3.5 sm:h-4 mr-2 sm:mr-3 text-gray-600" />
                       โปรไฟล์ของฉัน
                     </Link>
+                     
+                     <Link
+                      href="/saveblog"
+                      className="flex items-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+                      onClick={() => setIsProfileDropdownOpen(false)}
+                    >
+                      <Bookmark className="w-3.5 sm:w-4 h-3.5 sm:h-4 mr-2 sm:mr-3 text-gray-600" />
+                      บันทึกแล้ว
+                    </Link>
+                   
                     <Link
                       href="/Examhistory"
                       className="flex items-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-50 transition-colors"
